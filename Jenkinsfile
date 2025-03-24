@@ -48,8 +48,8 @@ pipeline {
         stage('Restart Pods') {
             steps {
                 sh '''
-                kubectl rollout restart deployment backend-deployment
-                kubectl rollout restart deployment frontend-deployment
+                kubectl rollout restart deployment starwars-backend
+                kubectl rollout restart deployment starwars-frontend
                 '''
             }
         }
