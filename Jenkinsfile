@@ -30,7 +30,7 @@ pipeline {
             steps {
                 sh '''
                 eval $(minikube docker-env)
-                docker build -t $IMAGE_NAME_BACKEND backend/
+                docker build -t $IMAGE_NAME_BACKEND backend/starwars
                 docker build -t $IMAGE_NAME_FRONTEND frontend/
                 '''
             }
