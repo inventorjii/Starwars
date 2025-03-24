@@ -39,8 +39,8 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 sh '''
-                kubectl apply -f k8s/backend-deployment.yaml
-                kubectl apply -f k8s/frontend-deployment.yaml
+                kubectl apply -f backend/starwars/backend-deployment.yaml
+                kubectl apply -f frontend/frontend-deployment.yaml
                 '''
             }
         }
