@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend/starwars
+    ports:
+      - "8080:8080"
+    networks:
+      - starwars-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "0:5173"
+    depends_on:
+      - backend
+    networks:
+      - starwars-network
+
+networks:
+  starwars-network:
+    driver: bridge

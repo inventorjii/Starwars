@@ -1,0 +1,10 @@
+resilience4j.circuitbreaker:
+  instances:
+    starWarsCircuitBreaker:
+      slidingWindowSize: 5
+      failureRateThreshold: 50
+      slowCallRateThreshold: 50
+      permittedNumberOfCallsInHalfOpenState: 2
+      waitDurationInOpenState: 5000ms
+      registerHealthIndicator: true
+      automaticTransitionFromOpenToHalfOpenEnabled: true

@@ -1,0 +1,30 @@
+//        Set<String> filmNames = new HashSet<>();
+//
+//        List<StarWarsEntity> results = response.getResults();
+//
+//        for(StarWarsEntity starWarsEntity:results){
+//            List<String> filmLinks = starWarsEntity.getFilms();
+//
+//            if(filmLinks.size()>0){
+//                for(String links: filmLinks){
+//
+//                    String[] filmPart =  links.split("/");
+//
+//                    for(int i=0;i<filmPart.length;i++){
+//                        System.out.println(filmPart[i]);
+//                    }
+//
+//                    filmNames.add(swapiFeignClient.getFilm(filmPart[5]).get("title").toString());
+//                }
+//            }
+//
+//        }
+//
+
+
+//        Set<String> filmNames = response.getResults().stream()
+//                .flatMap(starWarsEntity -> starWarsEntity.getFilms().stream())
+//                .map(link -> link.split("/")[5]) // Extract film ID
+//                .distinct() // Avoid redundant API calls for the same film
+//                .map(filmId -> swapiFeignClient.getFilm(filmId).get("title").toString())
+//                .collect(Collectors.toSet());

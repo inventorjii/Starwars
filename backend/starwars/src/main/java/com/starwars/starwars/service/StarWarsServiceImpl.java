@@ -1,0 +1,93 @@
+package com.starwars.starwars.service;
+
+import com.starwars.starwars.cache.SwapiCache;
+import com.starwars.starwars.clients.SwapiFeignClient;
+import com.starwars.starwars.dto.StarWarsApiOutput;
+import com.starwars.starwars.dto.StarWarsApiResponse;
+import com.starwars.starwars.dto.StarWarsEntity;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+public class StarWarsServiceImpl implements StarWarsService{
+
+    @Autowired
+    SwapiFeignClient swapiFeignClient;
+
+    @Autowired
+    SwapiCache swapiCache;
+
+
+    @CircuitBreaker(name="starWarsCircuitBreaker", fallbackMethod = "starWarsFallback")
+    @Retry(name = "swapiRetry")
+    @Override
+    public StarWarsApiOutput getStarWarsData(String type, String name,boolean offline) {
+
+        System.out.println(type);
+        System.out.println(name);
+        System.out.println(offline);
+        try{
+            String cacheKey = type + "-" + name;
+            if(offline || !isSwapiAccessible()){
+                if(swapiCache.containsKey(cacheKey)){
+                    return  swapiCache.get(cacheKey);
+                }
+            }
+
+            StarWarsApiResponse response = swapiFeignClient.getSwapidata(type,name);
+
+            Set<String> filmNames = response.getResults().stream()
+                    .map(StarWarsEntity::getFilms) // Get the list of film links
+                    .filter(Objects::nonNull) // Skip null lists
+                    .flatMap(List::stream) // Flatten the list of film links
+                    .map(link -> link.split("/")[5]) // Extract film ID
+                    .distinct() // Avoid duplicate API calls
+                    .map(filmId -> swapiFeignClient.getFilm(filmId).get("title").toString()) // Fetch film title
+                    .collect(Collectors.toSet());
+
+            StarWarsApiOutput starWarsApiOutput = new StarWarsApiOutput(type,response.getCount(),
+                    name,filmNames);
+
+            swapiCache.put(cacheKey,starWarsApiOutput);
+            return starWarsApiOutput;
+        }catch (Exception e){
+            throw e;
+        }
+
+
+    }
+
+    public StarWarsApiOutput starWarsFallback(String type, String name,boolean offline,Throwable t){
+        String cacheKey = type + "-" + name;
+
+         //Return cached data if available
+        if (swapiCache.containsKey(cacheKey)) {
+            return swapiCache.get(cacheKey);
+        }
+
+        System.out.println("In Fallback");
+        // Return fallback data if cache is empty
+        return new StarWarsApiOutput(type,0,
+                name,new HashSet<>());
+
+    }
+
+
+    @Override
+    public boolean isSwapiAccessible() {
+        try {
+            swapiFeignClient.checkHealth();
+            return true;
+        } catch (RestClientException e) {
+            return false;
+        }
+    }
+
+}
