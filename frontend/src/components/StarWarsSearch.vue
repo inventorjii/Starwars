@@ -57,7 +57,7 @@ const fetchData = async () => {
   result.value = null;
 
   try {
-    const response = await fetch(`http://localhost:8080/api/starwars?type=${type.value}&name=${name.value}&offline=${offlineMode.value}`);
+    const response = await fetch(`http://localhost:8081/api/starwars?type=${type.value}&name=${name.value}&offline=${offlineMode.value}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch data');

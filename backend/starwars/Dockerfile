@@ -15,7 +15,7 @@ COPY target/starwars-0.0.1-SNAPSHOT.jar /app/starwars-0.0.1-SNAPSHOT.jar
 #     rm consul_1.11.0_linux_amd64.zip
 
 # Expose the port that your Spring Boot application uses
-EXPOSE 8080
+EXPOSE 8081
 
 # Start Consul agent and then your Spring Boot application
 CMD java -jar starwars-0.0.1-SNAPSHOT.jar
