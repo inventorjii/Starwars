@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/starwars")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80","http://localhost:5174"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:80","http://localhost:5174","http://localhost"})
 @Validated
 public class StarsWarsController {
 
