@@ -29,10 +29,6 @@ public class StarWarsServiceImpl implements StarWarsService{
     @Retry(name = "swapiRetry")
     @Override
     public StarWarsApiOutput getStarWarsData(String type, String name,boolean offline) {
-
-        System.out.println(type);
-        System.out.println(name);
-        System.out.println(offline);
         try{
             String cacheKey = type + "-" + name;
             if(offline || !isSwapiAccessible()){
@@ -60,7 +56,6 @@ public class StarWarsServiceImpl implements StarWarsService{
         }catch (Exception e){
             throw e;
         }
-
 
     }
 
