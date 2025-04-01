@@ -22,12 +22,10 @@ The Star Wars API Backend is a Spring Boot application that provides data about 
     
     Spring Boot 3 (REST API)
     
-    Swagger (OpenAPI 3.0)
+    Swagger
     
     Docker & Kubernetes
-    
-    Helm (for deployment management)
-    
+
     Feign Clients (for external API communication)
 
 
@@ -54,7 +52,7 @@ The Star Wars API Backend is a Spring Boot application that provides data about 
     
     4. mvn spring-boot:run
 
-- Swagger API Documentation is available at: http://localhost:8080/swagger-ui/index.html
+- Swagger API Documentation is available at: http://localhost:8081/swagger-ui/index.html
 
 
 Docker Build & Run
@@ -64,28 +62,14 @@ Docker Build & Run
     Run the container :- docker run -p 8080:8080 starwars-project-backend
 Deploy to Minikube
 
-    Start Minikube
-    
-    minikube start
-    
-    Use Minikube Docker environment
-    
-    eval $(minikube docker-env)
-    
-    Build the image inside Minikube
-    
-    docker build -t starwars-project-backend:latest .
-    
-    Deploy to Kubernetes
-    
-    kubectl apply -f deployment.yaml
-    kubectl apply -f service.yaml
-    
-    Check the running pods
-    
-    kubectl get pods
-    
-    Access API in Minikube
-    
-    minikube service starwars-project-backend --url
+    - Start Minikube -> minikube start
+
+    - Use Minikube Docker environment -> eval $(minikube docker-env)
+
+    - Build the image inside Minikube -> docker build -t starwars-project-backend:latest .
+
+    - Deploy to Kubernetes -> kubectl apply -f backend-deployment.yaml
+
+    - Check the running pods -> kubectl get pods
+
 
