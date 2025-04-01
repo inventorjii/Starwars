@@ -41,7 +41,7 @@ public class StarsWarsController {
     })
     @GetMapping
     public ResponseEntity<Object> getStartsWarsData(@RequestParam @NotBlank(message = "Type cannot be empty") String type,
-                                                               @RequestParam @NotBlank(message = "Name cannot be empty")
+                                                               @RequestParam @Valid @NotBlank(message = "Name cannot be empty")
                                                                @Pattern(regexp = "^[a-zA-Z ]+$", message = "Name must contain only letters and spaces") String name,
                                                                @RequestParam(required = false) boolean offline
     ){
