@@ -1,5 +1,19 @@
-# Vue 3 + TypeScript + Vite
+Star Wars API Frontend :-
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Features :-
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+1. Provides UI to take inputs from user.
+2. Supports offline and Online mode.
+3. Built with Vue js
+4. Deployed on Minikube.
+
+Technologies Used :-
+
+1. Vue version 5.0.8
+2. Node version 22.14.0
+3. Docker and Kubernetes
+
+Run Locally :-
+
+1. npm run dev
+2. Build -> npm run build
