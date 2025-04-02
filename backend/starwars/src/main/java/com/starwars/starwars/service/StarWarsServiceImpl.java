@@ -48,7 +48,7 @@ public class StarWarsServiceImpl implements StarWarsService{
             }
 
             // Iterating through each film links
-            Set<String> filmNames = filmLinks.parallelStream()
+            Set<String> filmNames = filmLinks.stream()
                     .map(link -> link.split("/")[5])
                     .map(filmId -> swapiFeignClient.getFilm(filmId).get("title").toString())
                     .collect(Collectors.toSet());
