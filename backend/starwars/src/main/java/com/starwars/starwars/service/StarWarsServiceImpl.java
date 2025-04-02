@@ -37,16 +37,22 @@ public class StarWarsServiceImpl implements StarWarsService{
                 }
             }
 
+            Set<String> filmLinks = new HashSet<>();
             StarWarsApiResponse response = swapiFeignClient.getSwapidata(type,name);
 
-            Set<String> filmNames = response.getResults().stream()
-                    .map(StarWarsEntity::getFilms) // Get the list of film links
-                    .filter(Objects::nonNull) // Skip null lists
-                    .flatMap(List::stream) // Flatten the list of film links
-                    .map(link -> link.split("/")[5]) // Extract film ID
-                    .distinct() // Avoid duplicate API calls
-                    .map(filmId -> swapiFeignClient.getFilm(filmId).get("title").toString()) // Fetch film title
+            // Collecting all film links first
+            for (StarWarsEntity entity : response.getResults()) {
+                if (entity.getFilms() != null) {
+                    filmLinks.addAll(entity.getFilms());
+                }
+            }
+
+            // Iterating through each film links
+            Set<String> filmNames = filmLinks.parallelStream()
+                    .map(link -> link.split("/")[5])
+                    .map(filmId -> swapiFeignClient.getFilm(filmId).get("title").toString())
                     .collect(Collectors.toSet());
+
 
             StarWarsApiOutput starWarsApiOutput = new StarWarsApiOutput(type,response.getCount(),
                     name,filmNames);
