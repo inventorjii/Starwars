@@ -35,30 +35,35 @@ public class StarWarsServiceImpl implements StarWarsService{
                 if(swapiCache.containsKey(cacheKey)){
                     return  swapiCache.get(cacheKey);
                 }
+                return new StarWarsApiOutput(type,0,
+                        name,new HashSet<>());
             }
+            else{
+                Set<String> filmLinks = new HashSet<>();
+                StarWarsApiResponse response = swapiFeignClient.getSwapidata(type,name);
 
-            Set<String> filmLinks = new HashSet<>();
-            StarWarsApiResponse response = swapiFeignClient.getSwapidata(type,name);
-
-            // Collecting all film links first
-            for (StarWarsEntity entity : response.getResults()) {
-                if (entity.getFilms() != null) {
-                    filmLinks.addAll(entity.getFilms());
+                // Collecting all film links first
+                for (StarWarsEntity entity : response.getResults()) {
+                    if (entity.getFilms() != null) {
+                        filmLinks.addAll(entity.getFilms());
+                    }
                 }
+
+                // Iterating through each film links
+                Set<String> filmNames = filmLinks.stream()
+                        .map(link -> link.split("/")[5])
+                        .map(filmId -> swapiFeignClient.getFilm(filmId).get("title").toString())
+                        .collect(Collectors.toSet());
+
+
+
+                StarWarsApiOutput starWarsApiOutput = new StarWarsApiOutput(type,response.getCount(),
+                        name,filmNames);
+
+                swapiCache.put(cacheKey,starWarsApiOutput);
+                return starWarsApiOutput;
             }
 
-            // Iterating through each film links
-            Set<String> filmNames = filmLinks.stream()
-                    .map(link -> link.split("/")[5])
-                    .map(filmId -> swapiFeignClient.getFilm(filmId).get("title").toString())
-                    .collect(Collectors.toSet());
-
-
-            StarWarsApiOutput starWarsApiOutput = new StarWarsApiOutput(type,response.getCount(),
-                    name,filmNames);
-
-            swapiCache.put(cacheKey,starWarsApiOutput);
-            return starWarsApiOutput;
         }catch (Exception e){
             throw e;
         }
